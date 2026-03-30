@@ -1,0 +1,35 @@
+#include<iostream>
+#include "raylib.h"
+#include "object.h"
+
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
+int main() {
+	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "prototype");
+	SetTargetFPS(60);
+
+	Map map;
+	map.Load("map.txt", 60);
+
+	Player player1(1, map.player1SpawnPos);
+	Player player2(2, map.player2SpawnPos);
+	player1.target = &player2;
+	player2.target = &player1;
+	player1.map = &map;
+	player2.map = &map;
+	float dt;
+	while (!WindowShouldClose()) {
+		ClearBackground(RAYWHITE);
+		dt = GetFrameTime();
+		player1.Update(dt);
+		player2.Update(dt);
+
+		BeginDrawing();
+		map.Draw();
+		player1.Draw();
+		player2.Draw();
+		EndDrawing();
+	}
+
+}
