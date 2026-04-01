@@ -47,11 +47,12 @@ public:
 	}
 
 	float hp = 100;
-	float speed = 200;
-
+	float x_speed = 800;
 	State state = State::Idle;
 	bool flipped = false;
 	virtual void TakeDamage(float damage) {};
+
+	
 
 	//jump
 	virtual void jump(float dt) {};
@@ -87,7 +88,7 @@ public:
 class Player : public Character {
 public:
 	float offsetX = -85;  
-	float offsetY = -180; 
+	float offsetY = -165; 
 	int playerID; //1,2
 
 	Player(int id, Vector2 position);
@@ -97,7 +98,7 @@ public:
 	void ApplyGravity(float dt);
 
 	void Update(float dt) override;
-
+	void CheckCollisionBlock(float dt);
 	void Draw() override;	
 	
 	void Move();

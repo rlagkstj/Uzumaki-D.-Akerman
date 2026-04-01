@@ -60,28 +60,32 @@ void Player::TakeDamage(float damage) {
 
 void Player::Update(float dt)
 {
-    Vector2 dir = { 0, 0 };
+
     switch (playerID) {
     case 1: //WASD
         if (IsKeyDown(KEY_A)) {
-            dir.x -= speed * dt;
+            velocity.x = x_speed;
             flipped = true;
         }
         if (IsKeyDown(KEY_D)) {
-            dir.x += speed * dt;
+            velocity.x = x_speed;
             flipped = false;
         }
+        if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D))
+            velocity.x = 0;
         if (IsKeyDown(KEY_W)) jump(dt);
         break;
-    case 2: //¹æÇâÅ°
+    case 2: //Arrow
         if (IsKeyDown(KEY_LEFT)) {
-            dir.x -= speed * dt;
+            velocity.x = x_speed;
             flipped = true;
         }
         if (IsKeyDown(KEY_RIGHT)) {
-            dir.x += speed * dt;
+            velocity.x = x_speed;
             flipped = false;
         }
+        if (!IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT))
+            velocity.x = 0;
         if (IsKeyDown(KEY_UP)) jump(dt);
         break;
     }
@@ -93,19 +97,11 @@ void Player::Update(float dt)
         }
     }
 
-    if (dir.x != 0)
-    {
-        if (state != State::Jump)
-            state = State::Move;
 
-        position.x += dir.x * speed * dt;
-    }
-    else
-    {
-        if(state != State::Jump)
-            state = State::Idle;
-    }
-    ApplyGravity(dt);
+    if (velocity.x != 0)
+        position.x += x_speed * (flipped ? -1 : 1) * dt;
+    CheckCollisionBlock(dt);
+    
     
 }
 
@@ -134,7 +130,7 @@ void Player::ApplyGravity(float dt)
 
     for (int tx : { tileXLeft, tileXRight }) {
 
-        if (map->IsPlatform(tx, tileY) || map->IsWall(tx,tileY)) {
+        if (map->IsPlatform(tx, tileY)) {
 
             if (velocity.y >= 0) {
                 position.y = tileY * tileSize;
@@ -167,15 +163,27 @@ Player::Player(int id, Vector2 pos) {
     
 }
 
+void Player::CheckCollisionBlock(float dt) {
+    if (map == nullptr) return;
+    float nextX = position.x + velocity.x + dt;
+    float nextY = position.y + velocity.y + dt;
+    int tileSize = map->GetTileSize();
+    float leftX = nextX - size.x / 2;
+    float rightX = nextX + size.x / 2;
+    float topY = nextY - size.y;
+    float bottomY = nextY;
 
+
+
+    ApplyGravity(dt);
+
+}
 
 void Object::Draw() {
 	
 }
 
 void Player::Draw() {
-    float offsetX = -85;   
-    float offsetY = -165; 
 
     Rectangle src = {
         0, 0,

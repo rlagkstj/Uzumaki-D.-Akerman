@@ -9,7 +9,6 @@ struct Map
 {
 public:
     bool Load(const std::string& filename, int tileSize);
-    bool IsWall(int x, int y) const;
 
     void Tile();
     void Draw() const;

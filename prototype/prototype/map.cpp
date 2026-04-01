@@ -99,13 +99,6 @@ void Map::Draw() const
     }
 }
 
-bool Map::IsWall(int x, int y) const
-{
-    if (x < 0 || y < 0 || y >= GetHeight() || x >= GetWidth())
-        return true;
-
-    return map[y][x] == '#';
-}
 
 char Map::GetTile(int x, int y) const
 {
