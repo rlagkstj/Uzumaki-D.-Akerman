@@ -22,6 +22,7 @@ int main() {
 	while (!WindowShouldClose()) {
 		ClearBackground(RAYWHITE);
 		dt = GetFrameTime();
+		dt = std::min(dt, 0.033f);
 		player1.Update(dt);
 		player2.Update(dt);
 

@@ -92,9 +92,6 @@ void Map::Draw() const
             else if (tile == '=') {
                 DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, BROWN);
             }
-            else if (tile == 'W') {
-                DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, PURPLE);
-            }
         }
     }
 }
@@ -111,7 +108,7 @@ char Map::GetTile(int x, int y) const
 bool Map::IsPlatform(int x, int y) const
 {
     char tile = GetTile(x, y);
-    return (tile == 'L' || tile == 'R' || tile == '=' || tile == 'W');
+    return (tile == 'L' || tile == 'R' || tile == '=');
 }
 
 int Map::GetWidth() const

@@ -20,6 +20,10 @@ public:
     int GetHeight() const;
     int GetTileSize() const { return tileSize; }
 
+    std::vector<std::string>& GetMap()  {
+        return map;
+    }
+
     Vector2 player1SpawnPos = { 0, 0 };
     Vector2 player2SpawnPos = { 0, 0 };
 

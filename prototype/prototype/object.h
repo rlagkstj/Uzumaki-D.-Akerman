@@ -33,6 +33,8 @@ private:
 class Character : public Object {
 public:
 
+	Vector2 last_position{ 0, 0 };
+
 	Vector2 size{ 64, 160 };
 
 	Vector2 hotspot{ size.x / 2,size.y / 2 };

@@ -60,7 +60,7 @@ void Player::TakeDamage(float damage) {
 
 void Player::Update(float dt)
 {
-
+    last_position = position;
     switch (playerID) {
     case 1: //WASD
         if (IsKeyDown(KEY_A)) {
@@ -97,10 +97,25 @@ void Player::Update(float dt)
         }
     }
 
-
     if (velocity.x != 0)
-        position.x += x_speed * (flipped ? -1 : 1) * dt;
+        position.x += velocity.x * (flipped ? -1 : 1) * dt;
+    
+    if (IsKeyPressed(KEY_U)) {
+        position.y -= 100;
+    }
+    if (IsKeyPressed(KEY_H)) {
+        position.x -= 100;
+    }
+    if (IsKeyPressed(KEY_J)) {
+        position.y += 100;
+    }
+    if (IsKeyPressed(KEY_K)) {
+        position.x += 100;
+    }
+
+
     CheckCollisionBlock(dt);
+   
     
     
 }
@@ -165,16 +180,109 @@ Player::Player(int id, Vector2 pos) {
 
 void Player::CheckCollisionBlock(float dt) {
     if (map == nullptr) return;
-    float nextX = position.x + velocity.x + dt;
-    float nextY = position.y + velocity.y + dt;
+    
+    Rectangle PreHitbox = {
+        last_position.x - size.x/2,
+        last_position.y - size.y,
+        size.x,
+        size.y
+    };
+	Rectangle NowHitbox = GetHitBox();
+
+
     int tileSize = map->GetTileSize();
-    float leftX = nextX - size.x / 2;
-    float rightX = nextX + size.x / 2;
-    float topY = nextY - size.y;
-    float bottomY = nextY;
 
+    for (int y = 0; y < map->GetMap().size(); y++) {
+        int startX = -1;
+        for (int x = 0; x < map->GetMap()[y].size(); x++) {
+            char tile = map->GetMap()[y][x];
 
+            if (tile == 'L') {
+                startX = x;
+            }
+            if (tile == 'R' && startX != -1) {
+                int endX = x;
 
+                Rectangle platform = {
+                    startX * tileSize,
+                    y * tileSize,
+                    (endX - startX + 1) * tileSize,
+                    (float)tileSize
+                };
+
+                if (CheckCollisionRecs(NowHitbox, platform)) {
+
+                    float overlapX = 0;
+                    float overlapY = 0;
+
+                    if (NowHitbox.x < platform.x) {
+                        overlapX = (NowHitbox.x + NowHitbox.width) - platform.x;
+                    }
+                    else {
+                        overlapX = NowHitbox.x - (platform.x + platform.width);
+                    }
+
+                    if (NowHitbox.y < platform.y) {
+                        overlapY = (NowHitbox.y + NowHitbox.height) - platform.y;
+                    }
+                    else {
+                        overlapY = NowHitbox.y - (platform.y + platform.height);
+                    }
+                    if (abs(overlapX) < abs(overlapY)) {
+                        position.x -= overlapX;
+                        velocity.x = 0;
+                    }
+                    else {
+                        position.y -= overlapY;
+                        velocity.y = 0;
+                    }
+                    NowHitbox = GetHitBox();
+                }
+
+                startX = -1;
+            }
+
+            /*Rectangle tileRect = {
+                (float)x * tileSize,
+                (float)y * tileSize,
+                (float)tileSize,
+                (float)tileSize
+            };
+
+            if (CheckCollisionRecs(NowHitbox, tileRect) && (tile == '=' || tile == 'L' || tile == 'R')) {
+
+                float overlapX = 0;
+                float overlapY = 0;
+
+                if (NowHitbox.x < tileRect.x) {
+                    overlapX = (NowHitbox.x + NowHitbox.width) - tileRect.x;
+                }
+                else {
+                    overlapX = NowHitbox.x - (tileRect.x + tileRect.width);
+                }
+
+                if (NowHitbox.y < tileRect.y) {
+                    overlapY = (NowHitbox.y + NowHitbox.height) - tileRect.y;
+                }
+                else {
+                    overlapY = NowHitbox.y - (tileRect.y + tileRect.height);
+                }
+                if (abs(overlapX) < abs(overlapY)) {
+                    position.x -= overlapX;
+                    velocity.x = 0;
+                }
+                else {
+                    position.y -= overlapY;
+                    velocity.y = 0;
+                }
+                NowHitbox = GetHitBox();
+            }
+            */
+            
+
+            
+        }
+    }
     ApplyGravity(dt);
 
 }
