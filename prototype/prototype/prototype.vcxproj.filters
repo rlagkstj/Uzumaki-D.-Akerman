@@ -24,6 +24,12 @@
     <ClCompile Include="map.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Ending.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+>>>>>>> 한서
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h">
@@ -32,5 +38,14 @@
     <ClInclude Include="map.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Ending.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+>>>>>>> 한서
   </ItemGroup>
 </Project>

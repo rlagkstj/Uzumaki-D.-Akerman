@@ -4,6 +4,10 @@
 #include "raylib.h"
 #include "map.h"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ?œì„œ
 #define FLOOR_Y 500
 
 enum class State {

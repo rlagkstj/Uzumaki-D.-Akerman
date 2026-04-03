@@ -56,6 +56,11 @@ void Punch::Use(Character* character)
 void Player::TakeDamage(float damage) {
     hp -= damage;
     std::cout << hp << std::endl;
+<<<<<<< HEAD
+=======
+
+   
+>>>>>>> ?œì„œ
 }
 
 void Player::Update(float dt)
