@@ -26,34 +26,18 @@ void Punch::Use(Character* character)
     float punch_offset_Y = 90;
 
     if (!player->flipped) {
-        hitbox = {
-            player->position.x + punch_offset_X,
-            player->position.y - height / 2 - punch_offset_Y,
-            range,
-            height
-        };
+        hitbox = { player->position.x + punch_offset_X, player->position.y - height / 2 - punch_offset_Y, range, height };
     }
     else {
-        hitbox = {
-            player->position.x - range - punch_offset_X,
-            player->position.y - height / 2 - punch_offset_Y,
-            range,
-            height
-        };
+        hitbox = { player->position.x - range - punch_offset_X, player->position.y - height / 2 - punch_offset_Y, range, height };
     }
 
-    Rectangle targetBox = {
-        target->position.x - target->size.x / 2,
-        target->position.y - target->size.y,
-        target->size.x,
-        target->size.y
-    };
+    Rectangle targetBox = { target->position.x - target->size.x / 2, target->position.y - target->size.y, target->size.x, target->size.y};
 
     if (CheckCollisionRecs(hitbox, targetBox)) {
         target->TakeDamage(damage);
         std::cout << "Hit" << std::endl;
     }
-    DrawRectangle(targetBox.x, targetBox.y, targetBox.width, targetBox.height, GREEN);
     DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, RED);
 }
 
@@ -247,9 +231,7 @@ void Player::CheckCollisionBlock(float dt) {
 
 }
 
-void Object::Draw() {
-	
-}
+void Object::Draw() {}
 
 void Player::Draw() {
     float frameWidth = 1600 / 8.0f; // 200
@@ -258,32 +240,12 @@ void Player::Draw() {
     Rectangle src;
 
     if (isAttacking) {
-        src = {
-            frameWidth * currentFrame + (flipped ? - size.x / 2 + 2 : 0),
-            0,
-            frameWidth * (flipped ? -1 : 1),
-            frameHeight
-        };
-        DrawTextureRec(
-            attackTexture,
-            src,
-            { position.x + offsetX, position.y + offsetY },
-            WHITE
-        );
+        src = { frameWidth * currentFrame + (flipped ? - size.x / 2 + 2 : 0), 0, frameWidth * (flipped ? -1 : 1), frameHeight };
+        DrawTextureRec( attackTexture, src, { position.x + offsetX, position.y + offsetY }, WHITE );
     }
     else {
-        src = {
-            0,
-            0,
-            (float)texture.width * (flipped ? -1 : 1),
-            frameHeight
-        };
-        DrawTextureRec(
-            attackTexture,
-            src,
-            { position.x + offsetX, position.y + offsetY },
-            WHITE
-        );
+        src = { 0, 0, (float)texture.width * (flipped ? -1 : 1), frameHeight };
+        DrawTextureRec( attackTexture, src, { position.x + offsetX, position.y + offsetY }, WHITE );
     }
 
     //Hitbox
@@ -360,13 +322,12 @@ void Player::HPBar() {
     }
 }
 
+
+
 void Player::change_state(State* new_state) {
     current_state = new_state;
     current_state->Enter(this);
 }
-
-
-
 void Player::State_Idle::Enter(Player* player){}
 void Player::State_Idle::Update(Player* player, double dt){}
 void Player::State_Idle::CheckExit(Player* player) {
