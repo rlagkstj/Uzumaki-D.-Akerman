@@ -35,7 +35,7 @@ public:
 
 	Vector2 last_position{ 0, 0 };
 
-	Vector2 size{ 64, 160 };
+	Vector2 size{ 64, 120 };
 
 	Vector2 hotspot{ size.x / 2,size.y / 2 };
 
@@ -56,8 +56,6 @@ public:
 
 	
 
-	//jump
-	virtual void jump(float dt) {};
 	float gravity = 1800;
 	float jumpPower = -1300;
 	bool IsGround = true;
@@ -83,21 +81,27 @@ private:
 
 class Punch : public Skill {
 public:
-	float damage = 30;
+	Punch() {
+		damage = 15;
+		cooldown = 0.5f;
+	}
+
 	void Use(Character* character) override;
 };
 
 class Player : public Character {
 public:
 	float offsetX = -85;  
-	float offsetY = -165; 
+	float offsetY = -140; 
 	int playerID; //1,2
+	float displayHP = 100;
 
 	Player(int id, Vector2 position);
 	Skill* skills[4] = { nullptr, nullptr, nullptr, nullptr };
 
-	void jump(float dt) override;
 	void ApplyGravity(float dt);
+	void MoveX(float dt);
+
 
 	void Update(float dt) override;
 	void CheckCollisionBlock(float dt);
@@ -106,11 +110,80 @@ public:
 	void Move();
 	void TakeDamage(float damage) override;
 
+	void UseSkill(int index);
+
+	void HPBar();
+
 	Character* target = nullptr;
 
 	// 임시
 	Texture2D texture = LoadTexture("player.png");
+	Texture2D attackTexture = LoadTexture("player_punch.png");
 	Map* map = nullptr;
+
+	int currentFrame = 0;
+	float frameTime = 0.0f;
+	float frameSpeed = 0.06f; // 프레임 전환 속도
+
+	bool isAttacking = false;
 private:
-	int skillKeys[4];
+	// 1번 G,1 || 2번 T,4 || 3번 H,2 || 4번 J,3
+	float player_cool[4] = { 0 };
+	char skillKeys[4] = { 0 };
+	bool passPlatform = false;
+	double passTimer = 0;
+
+	bool hasHit = false;
+
+	class State {
+	public:
+		virtual void Enter(Player* player) = 0;
+		virtual void Update(Player* player, double dt) = 0;
+		virtual void CheckExit(Player* player) = 0;
+		virtual std::string GetName() = 0;
+	};
+
+	class State_Idle : public State {
+	public:
+		virtual void Enter(Player* player) override;
+		virtual void Update(Player* player,double dt) override;
+		virtual void CheckExit(Player* player) override;
+		std::string GetName() override { return "Idle"; }
+	};
+
+	State_Idle state_idle;
+
+	class State_Jumping : public State {
+	public:
+		virtual void Enter(Player* player) override;
+		virtual void Update(Player* player,double dt) override;
+		virtual void CheckExit(Player* player) override;
+		std::string GetName() override { return "Jumping"; }
+	};
+
+	State_Jumping state_jumping;
+
+	class State_Running : public State {
+	public:
+		virtual void Enter(Player* player) override;
+		virtual void Update(Player* player,double dt) override;
+		virtual void CheckExit(Player* player) override;
+		std::string GetName() override { return "Running"; }
+	};
+
+	State_Running state_running;
+
+	class State_Attack : public State {
+	public:
+		virtual void Enter(Player* player) override;
+		virtual void Update(Player* player, double dt) override;
+		virtual void CheckExit(Player* player) override;
+		std::string GetName() override { return "Attacking"; }
+	};
+
+	State_Attack state_attacking;
+
+	void change_state(State* new_state);
+	State* current_state = nullptr;
+
 };

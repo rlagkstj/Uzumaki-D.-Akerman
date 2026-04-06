@@ -1,6 +1,8 @@
 #include<iostream>
 #include "raylib.h"
 #include "object.h"
+#include "Ending.h"
+#include "GameState.h"
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
@@ -19,6 +21,8 @@ int main() {
 	player1.map = &map;
 	player2.map = &map;
 	float dt;
+	float fadeAlpha = 0.0f;
+	GameState gameState = GameState::Playing;
 	while (!WindowShouldClose()) {
 		ClearBackground(RAYWHITE);
 		dt = GetFrameTime();
@@ -26,10 +30,39 @@ int main() {
 		player1.Update(dt);
 		player2.Update(dt);
 
+		if (gameState != GameState::Playing) {
+			fadeAlpha += 200 * dt;
+
+			if (fadeAlpha > 255) fadeAlpha = 255;
+		}
+
+		if (player1.hp <= 0) {
+			gameState = GameState::Player2Win;
+		}
+
+		if (player2.hp <= 0) {
+			gameState = GameState::Player1Win;
+		}
+
 		BeginDrawing();
 		map.Draw();
 		player1.Draw();
 		player2.Draw();
+		DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(),
+			Fade(BLACK, fadeAlpha / 255.0f));
+
+		if (fadeAlpha >= 255) {
+			switch (gameState)
+			{
+			case GameState::Player1Win:
+				EndGame1();
+				break;
+
+			case GameState::Player2Win:
+				EndGame2();
+				break;
+			}
+		}
 		EndDrawing();
 	}
 

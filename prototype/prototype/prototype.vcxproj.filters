@@ -24,12 +24,21 @@
     <ClCompile Include="map.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Ending.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="map.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Ending.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

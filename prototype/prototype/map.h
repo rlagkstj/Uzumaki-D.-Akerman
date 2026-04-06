@@ -14,13 +14,14 @@ public:
     void Draw() const;
 
     bool IsPlatform(int x, int y) const;
+    bool IspassPlatform(int x, int y) const;
     char GetTile(int x, int y) const;
 
     int GetWidth() const;
     int GetHeight() const;
     int GetTileSize() const { return tileSize; }
 
-    std::vector<std::string>& GetMap()  {
+    std::vector<std::string>& GetMap() {
         return map;
     }
 

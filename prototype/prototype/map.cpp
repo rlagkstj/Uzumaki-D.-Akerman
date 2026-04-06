@@ -1,4 +1,3 @@
-
 #include "map.h"
 
 void Map::Tile()
@@ -21,6 +20,21 @@ void Map::Tile()
                 }
                 else {
                     map[y][x] = '=';
+                }
+            }
+            if (original[y][x] == '-') {
+
+                bool leftSame = (x > 0 && original[y][x - 1] == '-');
+                bool rightSame = (x < original[y].size() - 1 && original[y][x + 1] == '-');
+
+                if (!leftSame) {
+                    map[y][x] = 'l';
+                }
+                else if (!rightSame) {
+                    map[y][x] = 'r';
+                }
+                else {
+                    map[y][x] = '-';
                 }
             }
         }
@@ -89,8 +103,17 @@ void Map::Draw() const
             else if (tile == 'R') {
                 DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, GREEN);
             }
+            else if (tile == 'l') {
+                DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, BLUE);
+            }
+            else if (tile == 'r') {
+                DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, GREEN);
+            }
             else if (tile == '=') {
                 DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, BROWN);
+            }
+            else if (tile == '-') {
+                DrawRectangle(x * tileSize, y * tileSize, tileSize, tileSize, YELLOW);
             }
         }
     }
@@ -109,6 +132,12 @@ bool Map::IsPlatform(int x, int y) const
 {
     char tile = GetTile(x, y);
     return (tile == 'L' || tile == 'R' || tile == '=');
+}
+
+bool Map::IspassPlatform(int x, int y) const
+{
+    char tile = GetTile(x, y);
+    return (tile == 'l' || tile == 'r' || tile == '-');
 }
 
 int Map::GetWidth() const
