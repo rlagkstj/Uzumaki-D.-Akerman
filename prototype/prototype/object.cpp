@@ -251,7 +251,7 @@ void Player::Draw() {
     //Hitbox
     Rectangle body = GetHitBox();
     DrawRectangleLines(body.x, body.y, body.width, body.height, GREEN);
-
+    DrawText(std::to_string(playerID).c_str(), body.x, body.y, 20, RED);
     DrawCircle(position.x, position.y, 3, RED);
 
     HPBar();
