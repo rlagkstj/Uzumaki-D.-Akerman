@@ -36,11 +36,11 @@ int main() {
 			if (fadeAlpha > 255) fadeAlpha = 255;
 		}
 
-		if (player1.hp <= 0) {
+		if (player1.hp <= 0 && player2.hp <= 0) {
+			gameState = GameState::Tie;
+		} else if (player1.hp <= 0) {
 			gameState = GameState::Player2Win;
-		}
-
-		if (player2.hp <= 0) {
+		} else if (player2.hp <= 0) {
 			gameState = GameState::Player1Win;
 		}
 
@@ -61,9 +61,11 @@ int main() {
 			case GameState::Player2Win:
 				EndGame2();
 				break;
+			case GameState::Tie:
+				EndGameTie();
+				break;
 			}
 		}
 		EndDrawing();
 	}
-
 }

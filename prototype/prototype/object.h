@@ -83,7 +83,7 @@ class Punch : public Skill {
 public:
 	Punch() {
 		damage = 15;
-		cooldown = 0.5f;
+		cooldown = 0.2f;
 	}
 
 	void Use(Character* character) override;
@@ -119,11 +119,18 @@ public:
 	// 임시
 	Texture2D texture = LoadTexture("player.png");
 	Texture2D attackTexture = LoadTexture("player_punch.png");
+	Texture2D kickTexture = LoadTexture("player_kick.png");
+
+	Texture2D playerNow = attackTexture;
+
+
+	int attackStat = -1;
+
 	Map* map = nullptr;
 
 	int currentFrame = 0;
 	float frameTime = 0.0f;
-	float frameSpeed = 0.06f; // 프레임 전환 속도
+	float frameSpeed = 0.02f; // FRAME
 
 	bool isAttacking = false;
 private:

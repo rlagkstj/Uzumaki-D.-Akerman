@@ -17,8 +17,8 @@ void Punch::Use(Character* character)
     Character* target = player->target;
     if (target == nullptr) return;
 
-    float range = 60.0f;
-    float height = 50.0f;
+    float range = 80.0f;
+    float height = 60.0f;
 
     Rectangle hitbox;
 
@@ -54,6 +54,8 @@ void Player::Update(float dt)
         current_state->Update(this, dt);
         current_state->CheckExit(this);
     }
+
+    
 
     MoveX(dt);
     if (velocity.x != 0)
@@ -239,13 +241,15 @@ void Player::Draw() {
 
     Rectangle src;
 
+    //+ (flipped ? - size.x / 2 + 4 : 0)
+
     if (isAttacking) {
-        src = { frameWidth * currentFrame + (flipped ? - size.x / 2 + 2 : 0), 0, frameWidth * (flipped ? -1 : 1), frameHeight };
-        DrawTextureRec( attackTexture, src, { position.x + offsetX, position.y + offsetY }, WHITE );
+        src = { frameWidth * currentFrame, 0, frameWidth * (flipped ? -1 : 1), frameHeight };
+        DrawTextureRec(playerNow, src, { position.x + offsetX + (flipped ? -size.x / 2 + 2 : 0) , position.y + offsetY }, playerID == 1 ? SKYBLUE : PINK );
     }
     else {
         src = { 0, 0, (float)texture.width * (flipped ? -1 : 1), frameHeight };
-        DrawTextureRec( attackTexture, src, { position.x + offsetX, position.y + offsetY }, WHITE );
+        DrawTextureRec(playerNow, src, { position.x + offsetX, position.y + offsetY }, playerID == 1 ? SKYBLUE : PINK);
     }
 
     //Hitbox
@@ -474,6 +478,24 @@ void Player::State_Attack::Enter(Player* player) {
     player->hasHit = false;
 
     player->velocity.x = 0;
+    
+    player->attackStat++;
+
+
+    if (player->attackStat >= 3) {
+        player->attackStat = 0;
+    }
+
+    if (player->attackStat >= 2) {
+        player->playerNow = player->kickTexture;
+        player->frameSpeed = 0.04;
+    }
+    else {
+        player->playerNow = player->attackTexture;
+        player->frameSpeed = 0.02;
+    }
+
+    std::cout << player->attackStat << std::endl;
 }
 void Player::State_Attack::Update(Player* player, double dt) {
     player->frameTime += dt;
@@ -492,9 +514,10 @@ void Player::State_Attack::Update(Player* player, double dt) {
     //player->MoveX(dt);
 }
 void Player::State_Attack::CheckExit(Player* player) {
+    
     if (player->currentFrame >= 8) {
         player->isAttacking = false;
-
+        player->playerNow = player->attackTexture;
         switch (player->playerID) {
         case 1:
             if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D)) {

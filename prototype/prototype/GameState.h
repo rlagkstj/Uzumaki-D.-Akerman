@@ -4,5 +4,6 @@
 typedef enum {
     Playing,
     Player1Win,
-    Player2Win
+    Player2Win,
+    Tie
 } GameState;

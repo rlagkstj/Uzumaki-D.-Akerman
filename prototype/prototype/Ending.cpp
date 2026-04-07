@@ -26,3 +26,13 @@ void EndGame2() {
 
     DrawText(text, x, y, fontSize, WHITE);
 }
+void EndGameTie() {
+    const char* text = "Tie!";
+
+    int textWidth = MeasureText(text, fontSize);
+
+    int x = (GetScreenWidth() - textWidth) / 2;
+    int y = GetScreenHeight() / 2;
+
+    DrawText(text, x, y, fontSize, WHITE);
+}

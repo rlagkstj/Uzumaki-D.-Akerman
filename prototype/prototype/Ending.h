@@ -11,3 +11,4 @@
 
 void EndGame1();
 void EndGame2();
+void EndGameTie();
